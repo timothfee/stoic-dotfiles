@@ -52,14 +52,10 @@ cp -r config/* ~/.config/
 
 Necessary fonts:
 
-- **Roboto** - [here](https://fonts.google.com/specimen/Roboto)
-- **Material Design Icons** - [here](https://github.com/google/material-design-icons)
-- **Icomoon** - [here](https://www.dropbox.com/s/hrkub2yo9iapljz/icomoon.zip?dl=0)
+Fonts are located in the misc file. 
 
+Once you download them, place them into `~/.fonts` or `~/.local/share/fonts`.
 
-Once you download them and unpack them, place them into `~/.fonts` or `~/.local/share/fonts`.
-
-Or you can find the required fonts inside the `misc/fonts` folder of this repository.
 
 ```sh
 cp -r misc/fonts/* ~/.fonts/
@@ -79,8 +75,7 @@ git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
 
 > Finally, now you can login with AwesomeWM
 
-Congrats. :tada:
+Congratulations. 
 
-Log out from your current desktop session and log in into AwesomeWM.
-
+Please submit issues if you come across any. 
 </details>
