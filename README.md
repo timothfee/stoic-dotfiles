@@ -27,7 +27,7 @@ yay -S awesome-git
 > Install necessary dependencies
 
 ```sh
-yay -Sy picom-git wezterm rofi lxappearance-gtk3 xclip redshift betterlockscreen maim feh 
+yay -Sy picom-git wezterm rofi lxappearance-gtk3 xclip redshift betterlockscreen maim feh xrandr
 ```
 </details>
 
