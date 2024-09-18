@@ -1,8 +1,8 @@
 # Stoic-Dotfiles
 Simple dotfiles for AwesomeWM, with heavy inspirition from 夜 - Yoru (https://github.com/rxyhn/yoru)
 
-<img src="assets/1726625835.png" alt="Rice Preview">
-<img src="assets/1726625690.png" alt="Rice Preview">
+<img src="misc/assets/1726625835.png" alt="Rice Preview">
+<img src="misc/assets/1726625690.png" alt="Rice Preview">
 
 <br>
 <!-- SETUP -->
