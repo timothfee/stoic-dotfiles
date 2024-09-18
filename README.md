@@ -1,4 +1,4 @@
-# Stoic-Dotfiles
+# Stoic Dotfiles
 Simple dotfiles for AwesomeWM, with heavy inspirition from 夜 - Yoru (https://github.com/rxyhn/yoru)
 (if you like them please show support, this is my first time ricing)
 
@@ -39,7 +39,7 @@ yay -Sy picom-git wezterm rofi lxappearance-gtk3 xclip redshift betterlockscreen
 
 ```sh
 git clone --depth 1 --recurse-submodules https://github.com/timothfee/stoic-dotfiles.git
-cd awesome-dotfiles && git submodule update --remote --merge
+cd stoic-dotfiles && git submodule update --remote --merge
 ```
 
 > Copy config files
