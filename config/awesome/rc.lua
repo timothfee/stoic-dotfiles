@@ -112,30 +112,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %m %d, %H:%M", 60)
 
--- CPU widget
-local cpu_widget = awful.widget.watch('bash -c "grep \'cpu \' /proc/stat | awk \'{print ($2 + $4) / ($2 + $4 + $5) * 100}\'"', 5,
-    function(widget, stdout)
-        widget:set_text(string.format("CPU: %.1f%%", tonumber(stdout)))
-    end)
-
--- Memory Usage widget
-local mem_widget = wibox.widget.textbox()
-
--- Function to update the memory widget
-local function update_memory_widget()
-    awful.spawn.easy_async_with_shell("free -g | awk '/Mem/ {print $3, $2}'", function(stdout)
-        local used_mem, total_mem = stdout:match("(%d+)%s+(%d+)")
-        mem_widget:set_text(string.format("RAM: %sG", used_mem, total_mem))
-    end)
-end
-
--- Update every 10 seconds
-gears.timer {
-    timeout   = 10,
-    call_now  = true,
-    autostart = true,
-    callback  = update_memory_widget
-}
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -364,22 +340,7 @@ globalkeys = gears.table.join(
                     )
                   end
               end,
-              {description = "restore minimized", group = "client"}),
-
-    -- Prompt
-    awful.key({ modkey }, "x",
-              function ()
-                  awful.prompt.run {
-                    prompt       = "Run Lua code: ",
-                    textbox      = awful.screen.focused().mypromptbox.widget,
-                    exe_callback = awful.util.eval,
-                    history_path = awful.util.get_cache_dir() .. "/history_eval"
-                  }
-              end,
-              {description = "lua execute prompt", group = "awesome"}),
-    -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end,
-              {description = "show the menubar", group = "launcher"})
+              {description = "restore minimized", group = "client"})
 )
 
 clientkeys = gears.table.join(
@@ -520,14 +481,7 @@ awful.rules.rules = {
         class = {
           "Arandr",
           "Blueman-manager",
-          "Gpick",
-          "Kruler",
-          "MessageWin",  -- kalarm.
-          "Sxiv",
-          "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-          "Wpa_gui",
-          "veromix",
-          "xtightvncviewer"},
+          "pavucontrol"},
 
         -- Note that the name property shown in xprop might be set slightly after creation of the client
         -- and the name shown there might not match defined rules here.
@@ -615,9 +569,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
-
--- Xrandr
-awful.spawn.with_shell("xrandr --output HDMI-0 --mode 1920x1080 --rate 240")
 
 -- Rounded Corners
 client.connect_signal("manage", function (c)
