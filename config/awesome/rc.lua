@@ -112,6 +112,30 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = awful.widget.textclock("%a %m %d, %H:%M", 60)
 
+-- CPU widget
+local cpu_widget = awful.widget.watch('bash -c "grep \'cpu \' /proc/stat | awk \'{print ($2 + $4) / ($2 + $4 + $5) * 100}\'"', 5,
+    function(widget, stdout)
+        widget:set_text(string.format("CPU: %.1f%%", tonumber(stdout)))
+    end)
+
+-- Memory Usage widget
+local mem_widget = wibox.widget.textbox()
+
+-- Function to update the memory widget
+local function update_memory_widget()
+    awful.spawn.easy_async_with_shell("free -g | awk '/Mem/ {print $3, $2}'", function(stdout)
+        local used_mem, total_mem = stdout:match("(%d+)%s+(%d+)")
+        mem_widget:set_text(string.format("RAM: %sG", used_mem, total_mem))
+    end)
+end
+
+-- Update every 10 seconds
+gears.timer {
+    timeout   = 10,
+    call_now  = true,
+    autostart = true,
+    callback  = update_memory_widget
+}
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -286,7 +310,7 @@ globalkeys = gears.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey            }, "b", function () awful.spawn("firefox") end,
+    awful.key({ modkey            }, "b", function () awful.spawn("zen-browser") end,
           {description = "launch Firefox", group = "launcher"}),
     awful.key({ modkey            }, "d", function () awful.spawn("rofi -show drun") end,
               {description = "launch Rofi", group = "launcher"}),
@@ -314,9 +338,10 @@ globalkeys = gears.table.join(
               {description = "select previous", group = "layout"}),
     --- Screenshots
     awful.key({modkey, "Shift"    }, "s", function() awful.spawn.easy_async_with_shell( 
-        "maim -s ~/Pictures/Screenshots/$(date +%s).png && " ..
-        "xclip -selection clipboard -t image/png -i ~/Pictures/Screenshots/$(date +%s).png && " ..
-        "feh ~/Pictures/Screenshots/$(date +%s).png",
+        "timestamp=$(date +%s) && " ..
+        "maim -s ~/Pictures/Screenshots/$timestamp.png && " ..
+        "xclip -selection clipboard -t image/png -i ~/Pictures/Screenshots/$timestamp.png && " ..
+        "feh ~/Pictures/Screenshots/$timestamp.png",
         function() end) end,
               { description = "take an area screenshot", group = "utils" }),
     -- Toggle Redshift on
@@ -341,7 +366,7 @@ globalkeys = gears.table.join(
                   end
               end,
               {description = "restore minimized", group = "client"})
-)
+  )
 
 clientkeys = gears.table.join(
     awful.key({ modkey,           }, "f",
@@ -481,7 +506,14 @@ awful.rules.rules = {
         class = {
           "Arandr",
           "Blueman-manager",
-          "pavucontrol"},
+          "Gpick",
+          "Kruler",
+          "MessageWin",  -- kalarm.
+          "Sxiv",
+          "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+          "Wpa_gui",
+          "veromix",
+          "xtightvncviewer"},
 
         -- Note that the name property shown in xprop might be set slightly after creation of the client
         -- and the name shown there might not match defined rules here.
@@ -499,10 +531,6 @@ awful.rules.rules = {
     { rule_any = {type = { "normal", "dialog" }
       }, properties = { titlebars_enabled = false }
     },
-
-    -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
 }
 -- }}}
 
@@ -570,10 +598,6 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
--- Rounded Corners
-client.connect_signal("manage", function (c)
-    c.shape = gears.shape.rounded_rect
-end)
 
--- Picom
-awful.spawn.with_shell("picom --config ~/.config/picom/config.conf -b")
+require("configuration")
+
